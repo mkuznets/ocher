@@ -30,8 +30,6 @@ func main() {
 ## Client (Python)
 
 ```python
-# encoding: utf-8 
-
 import json
 import ocher  # pip install ocher
 

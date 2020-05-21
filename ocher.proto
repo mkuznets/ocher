@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option go_package = "mkuznets.com/go/ocher/pb";
+
+package ocher;
+
+service Ocher {
+    rpc QueueTransactional (stream Status) returns (stream Task) {
+    }
+}
+
+message Status {
+    message Init {
+        string id = 1;
+        string queue = 2;
+    }
+    message Error {
+        bytes error = 1;
+        string message = 2;
+    }
+    message Finish {
+        bytes result = 1;
+    }
+    oneof event {
+        Init init = 1;
+        Error error = 2;
+        Finish finish = 3;
+    }
+}
+
+message Task {
+    uint64 id = 1;
+    string queue = 2;
+    bytes args = 3;
+}

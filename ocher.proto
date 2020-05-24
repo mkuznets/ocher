@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "mkuznets.com/go/ocher/pb";
+option go_package = "mkuznets.com/go/ocher/internal/pb";
 
 package ocher;
 

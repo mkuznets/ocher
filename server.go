@@ -13,7 +13,7 @@ import (
 	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/pkg/errors"
 	"google.golang.org/grpc"
-	"mkuznets.com/go/ocher/pb"
+	"mkuznets.com/go/ocher/internal/pb"
 )
 
 const MaxRetries = 3
@@ -74,7 +74,7 @@ func (server *Server) QueueTransactional(s pb.Ocher_QueueTransactionalServer) er
 		log.Printf("init error: %v", err)
 		return err
 	}
-	log.Printf("got initial message (id=%v), listening to new tasks", init.ClientID)
+	log.Printf("`%s' connected (queue: %s), listening to new tasks", init.ClientID, init.Queue)
 
 	for foundTask := false; ; {
 

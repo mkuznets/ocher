@@ -6,7 +6,7 @@ all: $(OUT_GO) $(OUT_PY)
 
 $(OUT_GO): $(PROTO)
 	mkdir -p pb
-	protoc -I. --go_out=plugins=grpc,paths=source_relative:pb $^
+	protoc -I. --go_out=plugins=grpc,paths=source_relative:internal/pb $^
 
 $(OUT_PY): $(PROTO)
 	python scripts/generate_pb.py $^

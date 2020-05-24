@@ -54,3 +54,12 @@ CREATE TRIGGER ocher_notifier
     ON ocher_tasks
     FOR EACH ROW
 EXECUTE PROCEDURE ocher_tasks_notify();
+
+
+---- create above / drop below ----
+
+DROP TRIGGER IF EXISTS ocher_notifier ON ocher_tasks;
+DROP FUNCTION IF EXISTS ocher_tasks_notify CASCADE;
+DROP TABLE IF EXISTS ocher_tasks CASCADE;
+DROP TABLE IF EXISTS "ocher_retries" CASCADE;
+DROP TYPE IF EXISTS ocher_task_status CASCADE;

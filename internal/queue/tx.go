@@ -1,4 +1,4 @@
-package ocher
+package queue
 
 import (
 	"context"
@@ -7,12 +7,13 @@ import (
 	"github.com/pkg/errors"
 )
 
-type TxBase interface {
+type txBase interface {
 	Begin(ctx context.Context) (pgx.Tx, error)
 }
 
-func Tx(ctx context.Context, base TxBase, op func(tx pgx.Tx) error) error {
+func doTx(ctx context.Context, base txBase, op func(tx pgx.Tx) error) error {
 	tx, err := base.Begin(ctx)
+
 	if err != nil {
 		return errors.Wrap(err, "could not start transaction")
 	}

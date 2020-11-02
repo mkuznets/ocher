@@ -5,31 +5,37 @@ option go_package = "mkuznets.com/go/ocher/internal/pb";
 package ocher;
 
 service Ocher {
-    rpc QueueTransactional (stream Status) returns (stream Task) {
+    rpc TxTasks (stream Status) returns (stream Task) {
     }
+}
+
+message InitStatus {
+    string id = 1;
+    string task_name = 2;
+}
+message ErrorStatus {
+    bytes data = 1;
+    string message = 2;
+}
+message ReportStatus {
+    string message = 1;
+}
+message FinishStatus {
+    bytes data = 1;
 }
 
 message Status {
-    message Init {
-        string id = 1;
-        string queue = 2;
-    }
-    message Error {
-        bytes error = 1;
-        string message = 2;
-    }
-    message Finish {
-        bytes result = 1;
-    }
-    oneof event {
-        Init init = 1;
-        Error error = 2;
-        Finish finish = 3;
+    oneof status {
+        InitStatus init = 1;
+        ErrorStatus error = 2;
+        FinishStatus finish = 3;
+        ReportStatus report = 4;
     }
 }
 
+
 message Task {
     uint64 id = 1;
-    string queue = 2;
+    string name = 2;
     bytes args = 3;
 }

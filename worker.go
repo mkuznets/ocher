@@ -151,7 +151,7 @@ func (wrk *Worker) serveTask(ctx context.Context, client pb.OcherClient, tm *tas
 				return err, true
 			}
 		} else {
-			wrk.logger.Log(ctx, LogLevelError, "task finished", map[string]interface{}{
+			wrk.logger.Log(ctx, LogLevelInfo, "task finished", map[string]interface{}{
 				"id": task.ID(),
 			})
 			if err := stream.SendFinish(result); err != nil {

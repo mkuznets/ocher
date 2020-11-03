@@ -91,6 +91,7 @@ func (q *Queue) tryGetTask(ctx context.Context, name string) (*Task, error) {
 	}
 
 	task := &Task{
+		Args: args,
 		id:   taskID,
 		ctx:  ctx,
 		tx:   tx,

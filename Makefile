@@ -1,12 +1,16 @@
 PROTO = ocher.proto
-OUT_GO = pb/*.go
-OUT_PY = python/ocher/pb/*pb2.py
 
-all: $(OUT_GO) $(OUT_PY)
+PB_GO_DIR = internal/pb
+PB_GO = $(PB_GO_DIR)/ocher.pb.go $(PB_GO_DIR)/ocher_grpc.pb.go
 
-$(OUT_GO): $(PROTO)
-	mkdir -p internal/pb
-	protoc -I. --go_out=plugins=grpc,paths=source_relative:internal/pb $^
+PB_PY_DIR = python/ocher/pb/
+PB_PY = $(PB_PY_DIR)/ocher_pb2.py $(PB_PY_DIR)/ocher_pb2_grpc.py
 
-$(OUT_PY): $(PROTO)
+all: $(PB_GO) $(PB_PY)
+
+$(PB_GO) &:: $(PROTO)
+	mkdir -p $(PB_GO_DIR)
+	protoc -I. --go_out=paths=source_relative:$(PB_GO_DIR) --go-grpc_out=$(PB_GO_DIR) --go-grpc_opt=paths=source_relative $^
+
+$(PB_PY) &:: $(PROTO)
 	python scripts/generate_pb.py $^

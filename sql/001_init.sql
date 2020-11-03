@@ -57,29 +57,14 @@ CREATE INDEX "ocher_statuses__task_id_status_idx" ON ocher_statuses (task_id, st
 
 -- -----------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION ocher_tasks_notify()
-    RETURNS trigger AS
-$$
-BEGIN
-    PERFORM pg_notify(concat('ocher_', regexp_replace(NEW.name, '[^a-zA-Z0-9_]+', '_', 'g')), NEW.id::text);
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-
-DROP TRIGGER IF EXISTS ocher_notifier ON ocher_tasks;
-CREATE TRIGGER ocher_notifier
-    AFTER INSERT
-    ON ocher_tasks
-    FOR EACH ROW
-EXECUTE PROCEDURE ocher_tasks_notify();
-
--- -----------------------------------------------------------------------------
-
 CREATE OR REPLACE FUNCTION ocher_status_change()
     RETURNS trigger AS
 $$
 BEGIN
+    IF NEW.status = 'ENQUEUED' THEN
+        PERFORM pg_notify(concat('ocher_', regexp_replace(NEW.name, '[^a-zA-Z0-9_]+', '_', 'g')), NEW.id::text);
+    END IF;
+
     IF (TG_OP = 'INSERT' OR NEW.status <> OLD.status) THEN
         INSERT INTO ocher_statuses (task_id, status, changed_at)
         VALUES (NEW.id, NEW.status, STATEMENT_TIMESTAMP());

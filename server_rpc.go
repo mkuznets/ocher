@@ -10,6 +10,7 @@ import (
 )
 
 type ocherServer struct {
+	pb.UnimplementedOcherServer
 	logger Logger
 	queue  *queue.Queue
 }

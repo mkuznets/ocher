@@ -55,6 +55,9 @@ func (q *Queue) Task(ctx context.Context, name string) (*Task, error) {
 
 func (q *Queue) tryGetTask(ctx context.Context, name string) (*Task, error) {
 	tx, err := q.base.Begin(ctx)
+	if err != nil {
+		return nil, errors.Wrap(err, "could not start transaction")
+	}
 
 	ok := false
 	defer func() {
@@ -62,10 +65,6 @@ func (q *Queue) tryGetTask(ctx context.Context, name string) (*Task, error) {
 			_ = tx.Rollback(ctx)
 		}
 	}()
-
-	if err != nil {
-		return nil, errors.Wrap(err, "could not start transaction")
-	}
 
 	var (
 		taskID uint64
